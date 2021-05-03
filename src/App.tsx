@@ -1,26 +1,38 @@
-import React from 'react';
-import logo from './logo.svg';
-import './App.css';
+import React, { useState } from 'react'
+import TodoList from "./components/TodoList"
+import NewTodo from "./components/NewTodo"
 
-function App() {
+//작성한 ToDO 가지고 오기
+import { Todo } from "./todo.model"
+
+const App: React.FC = () => {
+  //dummy, const todos = [{ id: 't1', text: 'Finish the courser' }]
+
+  // 기존의 useState
+  //const [todos, setTodos] = useState([])
+
+  // 타입스크립트 활용
+  // state의 타입을 설정해줘야 한다.
+  // import 한 Todo 사용
+  const [todos, setTodos] = useState<Todo[]>([])
+
+
+  const todoAddHandler = (text: string) => {
+    setTodos(prevTodos => [...prevTodos, { id: Math.random().toString(), text: text }])
+  }
+
+  const todoDeleteHandler = (todoId: string) => {
+    setTodos(prevTodos => {
+      return prevTodos.filter(todo => todo.id !== todoId)
+    })
+  }
+
   return (
     <div className="App">
-      <header className="App-header">
-        <img src={logo} className="App-logo" alt="logo" />
-        <p>
-          Edit <code>src/App.tsx</code> and save to reload.
-        </p>
-        <a
-          className="App-link"
-          href="https://reactjs.org"
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          Learn React
-        </a>
-      </header>
+      <NewTodo onAddTodo={todoAddHandler} />
+      <TodoList todos={todos} onDeleteTodo={todoDeleteHandler} />
     </div>
-  );
+  )
 }
 
-export default App;
+export default App
